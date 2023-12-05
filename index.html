@@ -80,6 +80,11 @@
 	<title>首页</title>
 	<style>
 		body {
+			background-image: url();
+			background-size: cover;
+		}
+
+		body {
 			background-color: rgb(255, 255, 255)
 		}
 
@@ -91,6 +96,35 @@
 			margin: 0 auto;
 			border-collapse: collapse;
 		}
+
+		body {
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			position: relative;
+			/* 添加这个属性 */
+		}
+
+		body:before {
+			/* 添加这个伪元素 */
+			content: "";
+			/* 必须设置这个属性 */
+			position: absolute;
+			/* 添加这个属性 */
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			opacity: 0.3;
+			/* 添加这个属性，可以调整透明度，值从0到1 */
+			background-image: url(/图片/背景图.png);
+			background-size: cover;
+			background-position: center;
+			z-index: -1;
+			/* 添加这个属性，使伪元素在内容元素的下面 */
+		}
+
+
 
 		th,
 		td {
@@ -146,6 +180,8 @@
 			<td><a target="_blank" href="win.html">跳转</a></td>
 		</tr>
 	</table>
+	https://fgr178707.github.io/fgr1787076 <b><a style="color: red;">到期时间:[永久有效] 请牢记此域名</a></b><br>
+	https://www.fgr178707.fun <b><a style="color: red;">到期时间:[2024-11-15 07:59:59]</a></b>
 </body>
 
 </html>
