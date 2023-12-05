@@ -1,7 +1,82 @@
+<!-- /*
+ *                        _oo0oo_
+ *                       o8888888o
+ *                       88" . "88
+ *                       (| -_- |)
+ *                       0\  =  /0
+ *                     ___/`---'\___
+ *                   .' \\|     |// '.
+ *                  / \\|||  :  |||// \
+ *                 / _||||| -:- |||||- \
+ *                |   | \\\  - /// |   |
+ *                | \_|  ''\---/''  |_/ |
+ *                \  .-\__  '-'  ___/-. /
+ *              ___'. .'  /--.--\  `. .'___
+ *           ."" '<  `.___\_<|>_/___.' >' "".
+ *          | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+ *          \  \ `_.   \_ __\ /__ _/   .-` /  /
+ *      =====`-.____`.___ \_____/___.-`___.-'=====
+ *                        `=---='
+ * 
+ * 
+ *      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * 
+ *            佛祖保佑       永不宕机     永无BUG
+ */ -->
 <html>
+<!-- 设置网页顶部左侧最小图片 -->
 <link rel="icon" href="图片/1.gif" sizes="16x16">
 
+<!-- 以下代码由必应GPT生成 -->
+<!-- 创建一个表单元素，用于提交搜索请求 -->
+<form class="search-form">
+    <!-- 创建一个搜索类型的输入框，用于输入搜索关键字 -->
+    <input type="search" id="mySearch" name="q" placeholder="请输入要搜索的文字" />
+    <!-- 创建一个按钮元素，用于触发搜索事件 -->
+    <button>搜索</button>
+</form>
+
+<!-- 使用 JavaScript 代码来处理搜索事件 -->
+<script>
+    // 获取输入框和按钮元素的引用
+    var input = document.getElementById("mySearch");
+    var button = document.querySelector("button");
+
+    // 定义一个搜索函数，用于根据输入框的值进行搜索
+    function search() {
+        // 获取输入框的值
+        var query = input.value;
+        // 如果输入框不为空，就执行搜索
+        if (query) {
+            // 使用 window.find 方法在网页内搜索文字，如果找到，就高亮显示
+            // 如果没有找到，就弹出提示框
+            var found = window.find(query);
+            if (!found) {
+                alert("没有找到匹配的文字");
+            }
+        }
+    }
+
+    // 给按钮元素添加点击事件监听器，调用搜索函数
+    button.addEventListener("click", search);
+</script>
+
+<!-- 使用 CSS 代码来设置搜索框的样式 -->
+<style>
+    /* 为表单元素设置样式，使其水平居中 */
+    .search-form {
+        text-align: center;
+    }
+
+    /* 为输入框元素设置样式，使其高度为 4 像素 宽度为 400 像素 */
+    #mySearch {
+        height: 40px;
+        width: 400px;
+    }
+</style>
+
 <head>
+    <!-- 网站标题 -->
     <title>github好用软件仓库(试用)</title>
     <style>
         body {
@@ -19,11 +94,13 @@
 
         th,
         td {
+            /* 网站边框颜色和宽度 */
             border: 1px solid black;
             padding: 5px;
         }
 
         a {
+            /* 网站超链接的颜色 */
             color: blue;
             text-decoration: none;
         }
@@ -35,19 +112,29 @@
 </head>
 
 <body>
+    <!-- 文字标题 -->
     <h1>github好用软件仓库(试用)</h1>
     <ul>
+        <!-- 说明 -->
         <li>这些链接可能会随时失效，如果您发现某个链接无法下载，联系我们。</li>
         <li>这些软件的版权归原作者所有，我们不对这些软件的内容或质量负责。请在下载和使用这些软件时，遵守相关的协议和法律。</li>
         <li>如果您有任何建议或反馈，欢迎联系我们。</li>
     </ul>
     <table>
         <tr>
+            <!-- 类别-->
             <th>名称</th>
             <th>下载链接</th>
             <th>文字介绍</th>
             <th>注意事项</th>
         </tr>
+        <!-- 内容添加 -->
+        <!-- <tr>
+            <td>名称</td>
+            <td><a target="_blank" href="下载链接">下载链接文字显示</a></td>
+            <td>文字介绍</td>
+            <td>注意事项</td>
+        </tr> -->
         <tr>
             <td>GitHub520</td>
             <td><a target="_blank" href="https://github.com/521xueweihan/GitHub520">GitHub520</a></td>
