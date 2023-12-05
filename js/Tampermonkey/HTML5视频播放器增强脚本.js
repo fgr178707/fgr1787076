@@ -9,9 +9,11 @@
 // @name:de      HTML5 Video Player erweitertes Skript
 // @namespace    https://github.com/xxxily/h5player
 // @homepage     https://github.com/xxxily/h5player
-// @version      9.9.9
-// @description  支持热键:→ 快进5秒  ← 后退5秒 Ctrl+→ 快进30秒 Ctrl+← 后退30秒 ↑ 音量升高 5% ↓ 音量降低 5% Ctrl+↑ 音量升高 20% Ctrl+↓ 音量降低 20% F 下一帧(截图时进行微调以找到质量最佳的一帧) D 上一帧 (截图时进行微调以找到质量最佳的一帧) 
-// @match        https://www.youtube.com/*
+// @version      3.7.9
+// @description  支持热键:→ 快进5秒  ← 后退5秒 Ctrl+→ 快进30秒 Ctrl+← 后退30秒 ↑ 音量升高 5% ↓ 音量降低 5% Ctrl+↑ 音量升高 20% Ctrl+↓ 音量降低 20% F 下一帧(截图时进行微调以找到质量最佳的一帧) D 上一帧 (截图时进行微调以找到质量最佳的一帧)
+
+// @match       *://*.youtube.com/*
+
 // @exclude      *://yiyan.baidu.com/*
 // @exclude      *://*.bing.com/search*
 // @grant        unsafeWindow
@@ -1800,8 +1802,7 @@ const configManager = new ConfigManager({
             {
                 desc: '视频截图',
                 key: 'shift+s',
-                command: 'capture',
-                disabled: true
+                command: 'capture'
             },
             {
                 desc: '启用或禁止自动恢复播放进度功能',
@@ -1871,7 +1872,7 @@ const configManager = new ConfigManager({
                 disabled: true
             },
             {
-                // → 快进5秒 
+                // → 快进5秒
                 desc: '前进5秒',
                 key: 'arrowright',
                 command: 'setCurrentTimeUp'
@@ -1883,42 +1884,42 @@ const configManager = new ConfigManager({
                 command: 'setCurrentTimeDown'
             },
             {
-                //Ctrl+→ 快进30秒 
+                //Ctrl+→ 快进30秒
                 desc: '前进30秒',
                 key: 'ctrl+arrowright',
                 command: 'setCurrentTimeUp',
                 args: [30]
             },
             {
-                //Ctrl+← 后退30秒 
+                //Ctrl+← 后退30秒
                 desc: '后退30秒',
                 key: 'ctrl+arrowleft',
                 command: 'setCurrentTimeDown',
                 args: [-30]
             },
             {
-                //↑ 音量升高 5% 
+                //↑ 音量升高 5%
                 desc: '音量升高 5%',
                 key: 'arrowup',
                 command: 'setVolumeUp',
                 args: [0.05]
             },
             {
-                //↓ 音量降低 5% 
+                //↓ 音量降低 5%
                 desc: '音量降低 5%',
                 key: 'arrowdown',
                 command: 'setVolumeDown',
                 args: [-0.05]
             },
             {
-                //Ctrl+↑ 音量升高 20% 
+                //Ctrl+↑ 音量升高 20%
                 desc: '音量升高 20%',
                 key: 'ctrl+arrowup',
                 command: 'setVolumeUp',
                 args: [0.2]
             },
             {
-                //Ctrl+↓ 音量降低 20% 
+                //Ctrl+↓ 音量降低 20%
                 desc: '音量降低 20%',
                 key: 'ctrl+arrowdown',
                 command: 'setVolumeDown',
@@ -2004,14 +2005,14 @@ const configManager = new ConfigManager({
                 disabled: true
             },
             {
-                //F 下一帧(截图时进行微调以找到质量最佳的一帧) 
+                //F 下一帧(截图时进行微调以找到质量最佳的一帧)
                 desc: '下一帧',
                 key: 'F',
                 command: 'freezeFrame',
                 args: 1
             },
             {
-                //D 上一帧 (截图时进行微调以找到质量最佳的一帧) 
+                //D 上一帧 (截图时进行微调以找到质量最佳的一帧)
                 desc: '上一帧',
                 key: 'D',
                 command: 'freezeFrame',
@@ -2091,7 +2092,7 @@ const configManager = new ConfigManager({
             },
             {
                 desc: '播放下一集',
-                key: 'N',
+                key: ']',
                 command: 'setNextVideo'
             },
             {

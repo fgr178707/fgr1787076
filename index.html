@@ -1,27 +1,151 @@
+<!-- /*
+ *                        _oo0oo_
+ *                       o8888888o
+ *                       88" . "88
+ *                       (| -_- |)
+ *                       0\  =  /0
+ *                     ___/`---'\___
+ *                   .' \\|     |// '.
+ *                  / \\|||  :  |||// \
+ *                 / _||||| -:- |||||- \
+ *                |   | \\\  - /// |   |
+ *                | \_|  ''\---/''  |_/ |
+ *                \  .-\__  '-'  ___/-. /
+ *              ___'. .'  /--.--\  `. .'___
+ *           ."" '<  `.___\_<|>_/___.' >' "".
+ *          | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+ *          \  \ `_.   \_ __\ /__ _/   .-` /  /
+ *      =====`-.____`.___ \_____/___.-`___.-'=====
+ *                        `=---='
+ * 
+ * 
+ *      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * 
+ *            佛祖保佑       永不宕机     永无BUG
+ */ -->
 <html>
+<!-- 设置网页顶部左侧最小图片 -->
 <link rel="icon" href="图片/1.gif" sizes="16x16">
 
+<!-- 以下代码由必应GPT生成 -->
+<!-- 创建一个表单元素，用于提交搜索请求 -->
+<form class="search-form">
+	<!-- 创建一个搜索类型的输入框，用于输入搜索关键字 -->
+	<input type="search" id="mySearch" name="q" placeholder="请输入要搜索的文字" />
+	<!-- 创建一个按钮元素，用于触发搜索事件 -->
+	<button type="button">搜索</button>
+</form>
+
+<!-- 使用 JavaScript 代码来处理搜索事件 -->
+<script>
+	// 获取输入框和按钮元素的引用
+	var input = document.getElementById("mySearch");
+	var button = document.querySelector("button");
+
+	// 定义一个搜索函数，用于根据输入框的值进行搜索
+	function search() {
+		// 获取输入框的值
+		var query = input.value;
+		// 如果输入框不为空，就执行搜索
+		if (query) {
+			// 使用 window.find 方法在网页内搜索文字，如果找到，就高亮显示
+			// 如果没有找到，就弹出提示框
+			var found = window.find(query);
+			if (!found) {
+				alert("没有找到匹配的文字");
+			}
+		}
+	}
+
+	// 给按钮元素添加点击事件监听器，调用搜索函数
+	button.addEventListener("click", search);
+</script>
+
+<!-- 使用 CSS 代码来设置搜索框的样式 -->
+<style>
+	/* 为表单元素设置样式，使其水平居中 */
+	.search-form {
+		text-align: center;
+	}
+
+	/* 为输入框元素设置样式，使其高度为 4 像素 宽度为 400 像素 */
+	#mySearch {
+		height: 40px;
+		width: 400px;
+	}
+</style>
+
 <head>
+	<!-- 网站标题 -->
 	<title>首页</title>
+	<style>
+		body {
+			background-color: rgb(255, 255, 255)
+		}
+
+		h1 {
+			text-align: center;
+		}
+
+		table {
+			margin: 0 auto;
+			border-collapse: collapse;
+		}
+
+		th,
+		td {
+			/* 网站边框颜色和宽度 */
+			border: 1px solid black;
+			padding: 5px;
+		}
+
+		a {
+			/* 网站超链接的颜色 */
+			color: blue;
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+	</style>
 </head>
-<h1>首页</h1>
-<a target="_blank" href="https://github.com/fgr178707/fgr1787076">当前页源码</a>
-<hr>
-<pre>
-<b><a a style="color: red;"target="_blank" href="https://ffis.me/baidu/index.html?github 打不开怎么办">github无法打开方法解决</a></b>
-<hr>
-<a 	href="动漫.html">动漫网站</a>
-<a  href="github.html">Github</a>
-<a 	href="Tampermonkey.html">油猴脚本</a>
-<a  href="win.html">Windows系统优化软件</a>
-<hr>
-https://fgr178707.github.io/fgr1787076 <b><a style="color: red;">到期时间:[永久有效] 请牢记此处域名</a></b>
-https://www.fgr178707.fun 	       <b><a style="color: red;">到期时间:[2024-11-15 07:59:59]</a></b>
-<hr>
-<a>访问者计数从23/10/27</a>
-<img src="https://count.getloli.com/get/@:fgr1787076?theme=rule34" />
-<hr>
-<h1><a style="color: red;">支付宝扫码，每天可以领取，实体店通用券，金额随机，最高99元</a></h1>
-<img src="../../../图片/扫码领红包.jpg" width="350">
+
+<body>
+	<!-- 文字标题 -->
+	<h1>首页</h1>
+	<table>
+		<tr>
+			<!-- 类别-->
+			<th>名称</th>
+			<th>跳转链接</th>
+		</tr>
+		<!-- 内容添加 -->
+		<!-- <tr>
+            <td>名称</td>
+            <td><a target="_blank" href="下载链接">下载链接文字显示</a></td>
+            <td>文字介绍</td>
+            <td>注意事项</td>
+        </tr> -->
+
+		<!-- 内容添加 -->
+		<tr>
+			<td>动漫网站</td>
+			<td><a target="_blank" href="动漫.html">跳转</a></td>
+		</tr>
+		<tr>
+			<td>Github(新UI)</td>
+			<td><a target="_blank" href="github.html">跳转</a></td>
+		</tr>
+		<tr>
+			<td>油猴脚本(新UI)</td>
+			<td><a target="_blank" href="Tampermonkey.html">跳转</a></td>
+		</tr>
+		<tr>
+			<td>Windows系统优化软件</td>
+			<td><a target="_blank" href="win.html">跳转</a></td>
+		</tr>
+	</table>
 </body>
+
 </html>
