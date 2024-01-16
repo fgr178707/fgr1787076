@@ -3,7 +3,7 @@
 // @namespace   https://gitee.com/Kaiter-Plus/TampermonkeyScript/tree/master/douyin=auto-like
 // @author      Kaiter-Plus
 // @description 网页版抖音直播添加自动点赞功能
-// @version     0.10
+// @version     0.13
 // @license     BSD-3-Clause
 // @match       *://live.douyin.com/*
 // @icon        https://lf1-cdn-tos.bytegoofy.com/goofy/ies/douyin_web/public/favicon.ico
@@ -15,26 +15,27 @@
 // @grant       GM_notification
 // @grant       GM_registerMenuCommand
 // @grant       GM_unregisterMenuCommand
-// @downloadURL none
 // ==/UserScript==
 
 ; (() => {
     // 多久点击一次
     const CLICK_DURATION = 100
     // 点击层的类名
-    const CLICK_MODAL_CLASS = '.Zs4Pv2bD'
+    const CLICK_MODAL_CLASS = '.LO5TGkc0'
     // 点击事件层
     let clickModal = document.querySelector(CLICK_MODAL_CLASS)
     // 定时器
     let timer = null
-    // 记录上一次执行的时间
-    let prevTImestamp = 0
+    // 重新恢复点赞的定时器
+    let restartTimer = null
+    // 重新开始点赞的时间
+    let restartTimestamp = GM_getValue('restartTimestamp') ? +GM_getValue('restartTimestamp') : 0
 
     // 循环点击
+    let prevTImestamp = 0 // 记录上一次执行的时间
     function autoClick(timestamp) {
-        removeTip()
         const duration = timestamp - prevTImestamp
-        if (duration >= CLICK_DURATION) {
+        if (duration >= CLICK_DURATION + Math.random() * 100 - 50) {
             if (clickModal) {
                 clearLikeIcon()
                 // 获取元素的坐标
@@ -66,20 +67,56 @@
         }
     }
 
-    // 移除【您手速太快了，请休息一下】提示
-    function removeTip() {
-        const toastContainer = document.getElementById('toastContainer')
-        if (toastContainer) {
-            Array.from(toastContainer.children).forEach(element => {
-                if (element.textContent === '手速太快了，请休息一下吧~') {
-                    element.style.display = 'none'
+    // 如果已经提示【手速太快】，暂停 1 分钟再重新开始
+    let prevRestartTimestamp = 0
+    function restart(timestamp) {
+        cancelAnimationFrame(timer)
+        const duration = timestamp - prevRestartTimestamp
+        if (duration >= CLICK_DURATION) {
+            const currentTimestamp = +new Date()
+            if (currentTimestamp >= restartTimestamp) {
+                if (GM_getValue('switch')) {
+                    timer = requestAnimationFrame(autoClick)
+                    restartTimer = null
+                    return
                 }
-            })
+            }
+            prevRestartTimestamp = timestamp
         }
-        const toast = document.querySelector('[data-e2e="toast"]')
-        if (toast && toast.textContent === '手速太快了，请休息一下吧~') {
-            toast.style.display = 'none'
+        restartTimer = requestAnimationFrame(restart)
+    }
+
+    // 移除【您手速太快了，请休息一下】提示
+    let prevRemoveTipTimestamp = 0
+    function removeTip(timestamp) {
+        const duration = timestamp - prevRemoveTipTimestamp
+        if (duration >= CLICK_DURATION) {
+            const reg = /.*手速太快.*/
+            const toastContainer = document.getElementById('toastContainer')
+            if (toastContainer) {
+                if (toastContainer.children[0]) {
+                    toastContainer.textContent = ``
+                    if (!restartTimer) {
+                        const nextTimestamp = +new Date() + 60000
+                        restartTimestamp = nextTimestamp - restartTimestamp > 60000 ? nextTimestamp : restartTimestamp
+                        GM_setValue('restartTimestamp', restartTimestamp)
+                        restart(timestamp)
+                    }
+                }
+            }
+            const toast = document.querySelector('[data-e2e="toast"]')
+            if (toast && reg.test(toast.textContent)) {
+                toast.parentNode.removeChild(toast)
+                if (!restartTimer) {
+                    const nextTimestamp = +new Date() + 60000
+                    restartTimestamp = nextTimestamp - restartTimestamp > 60000 ? nextTimestamp : restartTimestamp
+                    GM_setValue('restartTimestamp', restartTimestamp)
+                    restart(timestamp)
+                }
+            }
+            prevRemoveTipTimestamp = timestamp
         }
+        requestAnimationFrame(removeTip)
     }
 
     // 菜单
@@ -133,15 +170,19 @@
 
     // 切换开关
     function switchFn() {
-        if (GM_getValue('switch')) autoClick(0)
+        if (GM_getValue('switch')) timer = requestAnimationFrame(autoClick)
         else cancelAnimationFrame(timer)
     }
 
     function init() {
         clickModal = document.querySelector(CLICK_MODAL_CLASS)
         registerMenuCommand()
-        if (GM_getValue('switch')) autoClick(0)
+        requestAnimationFrame(removeTip)
+        if (GM_getValue('switch')) timer = requestAnimationFrame(autoClick)
     }
 
-    init()
+    // 延迟 3 秒开始，抖音需要获取登录数据
+    setTimeout(() => {
+        init()
+    }, 3000)
 })()
