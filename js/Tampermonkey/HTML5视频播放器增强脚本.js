@@ -9,13 +9,11 @@
 // @name:de      HTML5 Video Player erweitertes Skript
 // @namespace    https://github.com/xxxily/h5player
 // @homepage     https://github.com/xxxily/h5player
-// @version      3.7.9
+// @version      3.7.11
 // @description  支持热键:→ 快进5秒  ← 后退5秒 Ctrl+→ 快进30秒 Ctrl+← 后退30秒 ↑ 音量升高 5% ↓ 音量降低 5% Ctrl+↑ 音量升高 20% Ctrl+↓ 音量降低 20% F 下一帧(截图时进行微调以找到质量最佳的一帧) D 上一帧 (截图时进行微调以找到质量最佳的一帧)
 
 // @match       *://*.youtube.com/*
 
-// @exclude      *://yiyan.baidu.com/*
-// @exclude      *://*.bing.com/search*
 // @grant        unsafeWindow
 // @grant        GM_addStyle
 // @grant        GM_setValue
@@ -1772,6 +1770,9 @@ const configManager = new ConfigManager({
             playbackRate: 1,
             volume: 1,
 
+            /* 最后一次设定的播放速度，默认1.5 */
+            lastPlaybackRate: 1.5,
+
             /* 是否允许存储播放进度 */
             allowRestorePlayProgress: {
 
@@ -1897,8 +1898,7 @@ const configManager = new ConfigManager({
                 command: 'setCurrentTimeDown',
                 args: [-30]
             },
-            {
-                //↑ 音量升高 5%
+            {//↑ 音量升高 5%
                 desc: '音量升高 5%',
                 key: 'arrowup',
                 command: 'setVolumeUp',
@@ -2092,7 +2092,7 @@ const configManager = new ConfigManager({
             },
             {
                 desc: '播放下一集',
-                key: ']',
+                key: 'N',
                 command: 'setNextVideo'
             },
             {
@@ -2361,52 +2361,99 @@ class TCC {
 }
 
 class Debug {
-    constructor(msg, printTime = false) {
-        const t = this;
-        msg = msg || 'debug message:';
-        t.log = t.createDebugMethod('log', null, msg);
-        t.error = t.createDebugMethod('error', null, msg);
-        t.info = t.createDebugMethod('info', null, msg);
-        t.warn = t.createDebugMethod('warn', null, msg);
+    constructor(config = {}) {
+        this.config = {
+            msg: '[Debug Msg]',
+            /* 显示调用栈信息 */
+            trace: false,
+            /* 是否把调用栈信息和要打印的信息放在一组折叠起来，直接输出的话再大量较多信息的时候会显得非常凌乱，所以默认true */
+            traceGroup: true,
+            printTime: false,
+
+            /* 统一设置字体颜色，背景颜色，其它样式等 */
+            color: '#000000',
+            backgroundColor: 'transparent',
+            style: '',
+
+            ...config,
+
+            /* 为不同的调试方法设置不同的字体颜色，背景颜色，其它样式等 */
+            colorMap: {
+                info: '#2274A5',
+                log: '#95B46A',
+                warn: '#F5A623',
+                error: '#D33F49',
+                ...config.colorMap || {}
+            },
+            backgroundColorMap: {
+                info: '',
+                log: '',
+                warn: '',
+                error: '',
+                ...config.backgroundColorMap || {}
+            },
+            styleMap: {
+                info: '',
+                log: '',
+                warn: '',
+                error: '',
+                ...config.styleMap || {}
+            }
+        };
+
+        const debugMethodList = ['log', 'error', 'info', 'warn'];
+        debugMethodList.forEach((name) => {
+            this[name] = this.createDebugMethod(name);
+        });
     }
 
     create(msg) {
         return new Debug(msg)
     }
 
-    createDebugMethod(name, color, tipsMsg) {
+    createDebugMethod(name) {
         name = name || 'info';
 
-        const bgColorMap = {
-            info: '#2274A5',
-            log: '#95B46A',
-            warn: '#F5A623',
-            error: '#D33F49'
-        };
-
-        const printTime = this.printTime;
+        const { msg, color, colorMap, backgroundColor, backgroundColorMap, style, styleMap, printTime, trace, traceGroup } = this.config;
+        const textColor = colorMap[name] || color;
+        const bgColor = backgroundColorMap[name] || backgroundColor;
+        const customStyle = styleMap[name] || style;
 
         return function () {
             if (!window._debugMode_) {
                 return false
             }
 
-            const msg = tipsMsg || 'debug message:';
-
             const arg = Array.from(arguments);
-            arg.unshift(`color: white; background-color: ${color || bgColorMap[name] || '#95B46A'}`);
+            const arg0 = arg[0];
+            arg.unshift(`color: ${textColor}; background-color: ${bgColor}; ${customStyle}`);
+
+            let timeStr = '';
 
             if (printTime) {
                 const curTime = new Date();
                 const H = curTime.getHours();
                 const M = curTime.getMinutes();
                 const S = curTime.getSeconds();
-                arg.unshift(`%c [${H}:${M}:${S}] ${msg} `);
-            } else {
-                arg.unshift(`%c ${msg} `);
+                timeStr = `[${H}:${M}:${S}] `;
             }
 
-            window.console[name].apply(window.console, arg);
+            arg.unshift(`%c ${timeStr}${msg} `);
+
+            if (trace) {
+                if (traceGroup) {
+                    const arg1Str = typeof arg0 === 'string' ? arg0 : Object.prototype.toString.call(arg0);
+                    console.groupCollapsed(`%c ${timeStr}${msg} ${arg1Str}`, `color: ${textColor}; background-color: ${bgColor}; ${customStyle}`);
+                    window.console[name].apply(console, arg);
+                    console.trace();
+                    console.groupEnd();
+                } else {
+                    window.console[name].apply(console, arg);
+                    console.trace();
+                }
+            } else {
+                window.console[name].apply(window.console, arg);
+            }
         }
     }
 
@@ -2415,9 +2462,39 @@ class Debug {
     }
 }
 
+// function demo () {
+//   window._debugMode_ = true
+//   window.debug = new Debug({
+//     msg: '[Debug Message]',
+//     colorMap: {
+//       info: '#FFFFFF',
+//       log: '#FFFFFF'
+//     },
+//     backgroundColorMap: {
+//       info: '#2274A5',
+//       log: '#95B46A'
+//     },
+//     style: 'font-size: 22px; font-weight: bold; padding: 2px 4px; border-radius: 2px;',
+//     trace: true,
+//     traceGroup: true,
+//     printTime: true
+//   })
+
+//   window.debug.log('debug mode is on', window.debug)
+//   window.debug.info('debug mode is on', window.debug)
+//   window.debug.warn('debug mode is on', window.debug)
+//   window.debug.error('debug mode is on', window.debug)
+// }
+// demo()
+
 var Debug$1 = new Debug();
 
-var debug = Debug$1.create('h5player message:');
+var debug = Debug$1.create({
+    msg: '[H5player Msg]',
+    trace: false,
+    traceGroup: true,
+    printTime: false
+});
 
 const $q = function (str) { return document.querySelector(str) };
 
@@ -2437,6 +2514,7 @@ const taskConf = {
      * */
     'demo.demo': {
         // disable: true, // 在该域名下禁止插件的所有功能
+        init: function (h5Player, taskConf) { },
         fullScreen: '.fullscreen-btn',
         exitFullScreen: '.exit-fullscreen-btn',
         webFullScreen: function () { },
@@ -2483,6 +2561,40 @@ const taskConf = {
         exclude: /\t/
     },
     'youtube.com': {
+        init: function (h5Player, taskConf) {
+            if (h5Player.hasBindSkipAdEvents) { return }
+            const startTime = new Date().getTime();
+            let skipCount = 0;
+
+            const skipHandler = (element) => {
+                const endTime = new Date().getTime();
+                const time = endTime - startTime;
+                /* 过早触发会导致广告无法跳过 */
+                if (time < 3000) {
+                    return false
+                }
+
+                /* 页面处于不可见状态时候也不触发 */
+                if (document.hidden) {
+                    return false
+                }
+
+                element.click();
+                skipCount++;
+
+                debug.log('youtube.com ad skip count', skipCount);
+            };
+
+            ready('.ytp-ad-skip-button', function (element) {
+                skipHandler(element);
+            });
+
+            ready('.ytp-ad-skip-button-modern', function (element) {
+                skipHandler(element);
+            });
+
+            h5Player.hasBindSkipAdEvents = true;
+        },
         webFullScreen: 'button.ytp-size-button',
         fullScreen: 'button.ytp-fullscreen-button',
         next: '.ytp-next-button',
@@ -2496,6 +2608,10 @@ const taskConf = {
             }
 
             playerwWrap.classList.add('ytp-autohide', 'playing-mode');
+            clearTimeout(playerwWrap.autohideTimer);
+            playerwWrap.autohideTimer = setTimeout(() => {
+                playerwWrap.classList.add('ytp-autohide', 'playing-mode');
+            }, 1000);
 
             if (!playerwWrap.hasBindCustomEvents) {
                 const mousemoveHander = (event) => {
@@ -2503,7 +2619,9 @@ const taskConf = {
 
                     clearTimeout(playerwWrap.mousemoveTimer);
                     playerwWrap.mousemoveTimer = setTimeout(() => {
-                        playerwWrap.classList.add('ytp-autohide', 'ytp-hide-info-bar');
+                        if (!player.paused) {
+                            playerwWrap.classList.add('ytp-autohide', 'ytp-hide-info-bar');
+                        }
                     }, 1000 * 2);
                 };
 
@@ -2543,6 +2661,7 @@ const taskConf = {
 
             playerwWrap.classList.remove('ytp-autohide', 'playing-mode');
             playerwWrap.classList.add('paused-mode');
+            clearTimeout(playerwWrap.autohideTimer);
         },
         shortcuts: {
             register: [
@@ -3529,14 +3648,14 @@ var zhCN = {
     allowExperimentFeatures: '开启实验性功能',
     notAllowExperimentFeatures: '禁用实验性功能',
     experimentFeaturesWarning: '实验性功能容易造成一些不确定的问题，请谨慎开启',
-    allowExternalCustomConfiguration: '开启外部自定义按键 (点我) (点我) (点我)',
-    notAllowExternalCustomConfiguration: '关闭外部自定义按键',
+    allowExternalCustomConfiguration: '开启外部自定义能力 (点我) (点我) (点我)',
+    notAllowExternalCustomConfiguration: '关闭外部自定义能力',
     configFail: '配置失败',
     globalSetting: '全局设置',
     localSetting: '仅用于此网站',
-    openDebugMode: '开启调试模式 (点我) (点我) (点我)',
+    openDebugMode: '开启调试模式(点我) (点我) (点我)',
     closeDebugMode: '关闭调试模式',
-    unfoldMenu: '展开菜单 (点我) (点我) (点我)',
+    unfoldMenu: '展开菜单(点我) (点我) (点我)',
     foldMenu: '折叠菜单',
     tipsMsg: {
         playspeed: '播放速度：',
@@ -5197,6 +5316,7 @@ const combinationKeysMonitor = (function () {
 class HotkeysRunner {
     constructor(hotkeys, win = window) {
         this.window = win;
+        this.windowList = [win];
         /* Mac和window使用的修饰符是不一样的 */
         this.MOD = typeof navigator === 'object' && /Mac|iPod|iPhone|iPad/.test(navigator.platform) ? 'Meta' : 'Ctrl';
         // 'Control', 'Shift', 'Alt', 'Meta'
@@ -5211,6 +5331,11 @@ class HotkeysRunner {
     /* 设置其它window对象的组合键监控逻辑 */
     setCombinationKeysMonitor(win) {
         this.window = win;
+
+        if (!this.windowList.includes(win)) {
+            this.windowList.push(win);
+        }
+
         combinationKeysMonitor.init(win);
     }
 
@@ -5301,8 +5426,14 @@ class HotkeysRunner {
     isMatchPrevPress(press) { return this.isMatch(this.prevPress, press) }
 
     run(opts = {}) {
-        const KeyboardEvent = this.window.KeyboardEvent;
-        if (!(opts.event instanceof KeyboardEvent)) { return false }
+        // 这里只对单个window有效
+        // const KeyboardEvent = this.window.KeyboardEvent
+        // if (!(opts.event instanceof KeyboardEvent)) { return false }
+
+        const KeyboardEventList = this.windowList.map(win => win.KeyboardEvent);
+        if (!KeyboardEventList.includes(opts.event.constructor)) {
+            return false
+        }
 
         const event = opts.event;
         const target = opts.target || null;
@@ -5586,7 +5717,7 @@ const h5Player = {
 
     playbackRate: configManager.get('media.playbackRate'),
     volume: configManager.get('media.volume'),
-    lastPlaybackRate: 1,
+    lastPlaybackRate: configManager.get('media.lastPlaybackRate'),
     /* 快进快退步长 */
     skipStep: 5,
 
@@ -6217,6 +6348,7 @@ const h5Player = {
         const playbackRate = oldPlaybackRate === 1 ? t.lastPlaybackRate : 1;
         if (oldPlaybackRate !== 1) {
             t.lastPlaybackRate = oldPlaybackRate;
+            configManager.setLocalStorage('media.lastPlaybackRate', oldPlaybackRate);
         }
 
         t.setPlaybackRate(playbackRate);
