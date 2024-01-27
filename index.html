@@ -78,71 +78,7 @@
 <head>
 	<!-- 网站标题 -->
 	<title>首页</title>
-	<style>
-		body {
-			background-image: url();
-			background-size: cover;
-		}
-
-		body {
-			background-color: rgb(255, 255, 255)
-		}
-
-		h1 {
-			text-align: center;
-		}
-
-		table {
-			margin: 0 auto;
-			border-collapse: collapse;
-		}
-
-		body {
-			justify-content: center;
-			align-items: center;
-			height: 100vh;
-			position: relative;
-			/* 添加这个属性 */
-		}
-
-		body:before {
-			/* 添加这个伪元素 */
-			content: "";
-			/* 必须设置这个属性 */
-			position: absolute;
-			/* 添加这个属性 */
-			left: 0;
-			top: 0;
-			width: 100%;
-			height: 100%;
-			opacity: 0.3;
-			/* 添加这个属性，可以调整透明度，值从0到1 */
-			background-image: url(/图片/背景图.png);
-			background-size: cover;
-			background-position: center;
-			z-index: -1;
-			/* 添加这个属性，使伪元素在内容元素的下面 */
-		}
-
-
-
-		th,
-		td {
-			/* 网站边框颜色和宽度 */
-			border: 1px solid black;
-			padding: 5px;
-		}
-
-		a {
-			/* 网站超链接的颜色 */
-			color: blue;
-			text-decoration: none;
-		}
-
-		a:hover {
-			text-decoration: underline;
-		}
-	</style>
+	<link rel="stylesheet" href="css\nutscraft.css">
 </head>
 
 <body>
@@ -157,31 +93,31 @@
 		<!-- 内容添加 -->
 		<!-- <tr>
             <td>名称</td>
-            <td><a target="_blank" href="下载链接">下载链接文字显示</a></td>
+            <td><a id="ac" target="_blank" href="下载链接">下载链接文字显示</a></td>
             <td>文字介绍</td>
             <td>注意事项</td>
         </tr> -->
 
 		<!-- 内容添加 -->
 		<tr>
-			<td>漫画网站</td>
-			<td><a target="_blank" href="漫画.html">跳转</a></td>
+			<td>动漫网站</td>
+			<td><a id="ac" target="_blank" href="动漫.html">跳转</a></td>
 		</tr>
 		<tr>
-			<td>动漫网站</td>
-			<td><a target="_blank" href="动漫.html">跳转</a></td>
+			<td>漫画网站</td>
+			<td><a id="ac" target="_blank" href="漫画.html">跳转</a></td>
 		</tr>
 		<tr>
 			<td>Github</td>
-			<td><a target="_blank" href="github.html">跳转</a></td>
+			<td><a id="ac" target="_blank" href="github.html">跳转</a></td>
 		</tr>
 		<tr>
 			<td>油猴脚本</td>
-			<td><a target="_blank" href="Tampermonkey.html">跳转</a></td>
+			<td><a id="ac" target="_blank" href="Tampermonkey.html">跳转</a></td>
 		</tr>
 		<tr>
 			<td>Windows系统优化软件（老UI）</td>
-			<td><a target="_blank" href="win.html">跳转</a></td>
+			<td><a id="ac" target="_blank" href="win.html">跳转</a></td>
 		</tr>
 	</table>
 
