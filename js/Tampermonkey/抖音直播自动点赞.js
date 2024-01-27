@@ -19,7 +19,7 @@
 
 ; (() => {
     // 多久点击一次
-    const CLICK_DURATION = 100
+    const CLICK_DURATION = 150
     // 点击层的类名
     const CLICK_MODAL_CLASS = '.LO5TGkc0'
     // 点击事件层
@@ -41,7 +41,7 @@
                 // 获取元素的坐标
                 const rect = clickModal.getBoundingClientRect()
                 const x = rect.top + Math.random() * 1 + 100
-                const y = rect.left + Math.random() * 1 + 100
+                const y = rect.left + Math.random() * 1 + 200
                 // 创建模拟点击事件
                 const clickEvent = new MouseEvent('click', {
                     view: unsafeWindow,
@@ -162,6 +162,7 @@
         // 设置数据
         item.value = !item.value
         GM_setValue(item.key, item.value)
+
         // 如果有点击事件，执行
         if (item.click) item.click()
         // 重新注册
