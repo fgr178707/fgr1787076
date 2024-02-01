@@ -1,3 +1,0 @@
-设置->开发者设置->开启 Beta 测试特性 
-基本设置->翻译服务->DeeplX(Beta) 
-API URL：http://127.0.0.1:1188/translate
